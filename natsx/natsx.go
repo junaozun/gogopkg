@@ -3,10 +3,8 @@ package natsx
 import (
 	"context"
 	"log"
-	"time"
 
 	"github.com/junaozun/gogopkg/config"
-	"github.com/nats-io/nats.go"
 )
 
 type NatsxServer struct {
@@ -16,9 +14,9 @@ type NatsxServer struct {
 
 func New(natsCfg *config.NatsConfig, serverName string) *NatsxServer {
 	connEnc, err := NewNatsPBEnc(natsCfg.Server,
-		nats.MaxReconnects(int(natsCfg.MaxReconnects)),
-		nats.ReconnectWait(time.Duration(natsCfg.ReconnectWait)),
-		nats.Timeout(time.Duration(natsCfg.RequestTimeout)),
+		// nats.MaxReconnects(int(natsCfg.MaxReconnects)),
+		// nats.ReconnectWait(time.Duration(natsCfg.ReconnectWait)),
+		// nats.Timeout(time.Duration(natsCfg.RequestTimeout)),
 	)
 
 	if err != nil {
