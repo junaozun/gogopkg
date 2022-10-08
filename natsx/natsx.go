@@ -2,9 +2,9 @@ package natsx
 
 import (
 	"context"
-	"log"
 
 	"github.com/junaozun/gogopkg/config"
+	"github.com/junaozun/gogopkg/logrusx"
 )
 
 type NatsxServer struct {
@@ -31,7 +31,9 @@ func New(natsCfg *config.NatsConfig, serverName string) *NatsxServer {
 }
 
 func (n *NatsxServer) Start(ctx context.Context) error {
-	log.Printf("[NatsxServer] %s Start success", n.ServerName)
+	logrusx.Log.WithFields(logrusx.Fields{
+		"serverName": n.ServerName,
+	}).Info("[NatsxServer] Start success")
 	select {
 	case <-ctx.Done():
 		return nil
