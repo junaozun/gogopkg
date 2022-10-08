@@ -33,7 +33,7 @@ func New(natsCfg *config.NatsConfig, serverName string) *NatsxServer {
 func (n *NatsxServer) Start(ctx context.Context) error {
 	logrusx.Log.WithFields(logrusx.Fields{
 		"serverName": n.ServerName,
-	}).Info("[NatsxServer] Start success")
+	}).Info("[NatsxServer] Start success......")
 	select {
 	case <-ctx.Done():
 		return nil
