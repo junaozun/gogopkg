@@ -3,13 +3,13 @@ package app
 import (
 	"context"
 	"errors"
-	"log"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 	"time"
 
+	"github.com/junaozun/gogopkg/logrusx"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -83,10 +83,14 @@ func (a *App) Run() error {
 			case <-signalChan:
 				err := a.Stop()
 				if err != nil {
-					log.Printf("failed to stop app: %v", err)
+					logrusx.Log.WithFields(logrusx.Fields{
+						"err": err,
+					}).Info("failed to stop app....")
 					return err
 				}
-				log.Printf("%sApp run interrupt.....", a.Name())
+				logrusx.Log.WithFields(logrusx.Fields{
+					"app": a.Name(),
+				}).Info("App run interrupt.....")
 			}
 		}
 	})
