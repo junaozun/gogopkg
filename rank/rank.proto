@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package rank;
+option go_package = "./;rank";
+
+message RankSnapshot {
+  map<uint64,uint32> snapshotData = 1;
+}

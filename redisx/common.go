@@ -1,8 +1,6 @@
 package redisx
 
-import (
-	"github.com/golang/protobuf/proto"
-)
+import "google.golang.org/protobuf/proto"
 
 func Encode(value interface{}) (interface{}, error) {
 	switch v := value.(type) {

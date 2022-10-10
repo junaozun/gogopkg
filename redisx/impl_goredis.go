@@ -238,6 +238,34 @@ func (c *goRedis) ListAll(key string) ([]string, error) {
 	return c.LRange(key, 0, -1)
 }
 
+func (c *goRedis) ZIncrby(key string, data map[string]int) error {
+	for mem, addScore := range data {
+		err := c.rdb.ZIncrBy(context.Background(), key, float64(addScore), mem).Err()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (c *goRedis) ZRem(key string, mems ...string) error {
+	return c.rdb.ZRem(context.Background(), key, mems).Err()
+}
+
+// ZRevRank 获取指定成员的排名
+func (c *goRedis) ZRevRank(key string, mem string) (int64, error) {
+	rank, err := c.rdb.ZRevRank(context.Background(), key, mem).Result()
+	if err != nil {
+		return 0, err
+	}
+	return rank, nil
+}
+
+// ZRevRangeWithScores 获取start-stop之间的排名，按照score从大到小返回
+func (c *goRedis) ZRevRangeWithScores(key string, start, stop int64) ([]redis.Z, error) {
+	return c.rdb.ZRevRangeWithScores(context.Background(), key, start, stop).Result()
+}
+
 func sliceCmdConvert(cmd *redis.SliceCmd) ([]string, error) {
 	var vals = make([]string, 0, len(cmd.Val()))
 	for _, v := range cmd.Val() {

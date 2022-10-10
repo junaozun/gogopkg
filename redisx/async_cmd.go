@@ -2,6 +2,8 @@ package redisx
 
 import (
 	"fmt"
+
+	"github.com/go-redis/redis/v8"
 )
 
 // doCmd server命令
@@ -121,4 +123,77 @@ func (c *setCmd) ExecCmd(cli IClient) error {
 
 func (c *setCmd) Key() string {
 	return c.key
+}
+
+type zIncrbyCmd struct {
+	key   string
+	value map[string]int
+	err   error
+}
+
+func (c *zIncrbyCmd) ExecCmd(cli IClient) error {
+	c.err = cli.ZIncrby(c.key, c.value)
+	return c.err
+}
+
+func (c *zIncrbyCmd) Key() string {
+	return c.key
+}
+
+type zAddCmd struct {
+	key   string
+	value map[string]float64
+	err   error
+}
+
+func (c *zAddCmd) ExecCmd(cli IClient) error {
+	arr := NewZAddReq()
+	for mem, score := range c.value {
+		arr.Add(score, mem)
+	}
+	_, c.err = cli.ZAdd(c.key, arr)
+	return c.err
+}
+
+func (c *zAddCmd) Key() string {
+	return c.key
+}
+
+type zRemCmd struct {
+	key   string
+	value []string
+	err   error
+}
+
+func (c *zRemCmd) ExecCmd(cli IClient) error {
+	c.err = cli.ZRem(c.key, c.value...)
+	return c.err
+}
+
+func (c *zRemCmd) Key() string {
+	return c.key
+}
+
+type zrevrangeCmd struct {
+	key      string
+	start    int64
+	stop     int64
+	ret      []redis.Z
+	retError error
+	callback func([]redis.Z, error)
+}
+
+func (c *zrevrangeCmd) ExecCmd(cli IClient) error {
+	c.ret, c.retError = cli.ZRevRangeWithScores(c.key, c.start, c.stop)
+	return c.retError
+}
+
+func (c *zrevrangeCmd) Key() string {
+	return c.key
+}
+
+func (c *zrevrangeCmd) Callback() {
+	if c.callback != nil {
+		c.callback(c.ret, c.retError)
+	}
 }

@@ -6,6 +6,8 @@ import (
 	"runtime"
 	"sync"
 	"time"
+
+	"github.com/go-redis/redis/v8"
 )
 
 // AsyncClient redis 异步调用
@@ -244,6 +246,36 @@ func (c *AsyncClient) HMGet(key string, field []string, cb func([]string, error)
 	c.addCmd(&hmgetCmd{
 		key:      key,
 		field:    field,
+		callback: cb,
+	})
+}
+
+func (c *AsyncClient) ZIncrby(key string, data map[string]int) {
+	c.addCmd(&zIncrbyCmd{
+		key:   key,
+		value: data,
+	})
+}
+
+func (c *AsyncClient) ZAdd(key string, data map[string]float64) {
+	c.addCmd(&zAddCmd{
+		key:   key,
+		value: data,
+	})
+}
+
+func (c *AsyncClient) ZRem(key string, mems ...string) {
+	c.addCmd(&zRemCmd{
+		key:   key,
+		value: mems,
+	})
+}
+
+func (c *AsyncClient) ZRevRange(key string, start, stop int64, cb func([]redis.Z, error)) {
+	c.addCmd(&zrevrangeCmd{
+		key:      key,
+		start:    start,
+		stop:     stop,
 		callback: cb,
 	})
 }
