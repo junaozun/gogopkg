@@ -197,3 +197,49 @@ func (c *zrevrangeCmd) Callback() {
 		c.callback(c.ret, c.retError)
 	}
 }
+
+type zrevrankCmd struct {
+	key      string
+	mem      string
+	ret      int64
+	retError error
+	callback func(int64, error)
+}
+
+func (c *zrevrankCmd) ExecCmd(cli IClient) error {
+	c.ret, c.retError = cli.ZRevRank(c.key, c.mem)
+	return c.retError
+}
+
+func (c *zrevrankCmd) Key() string {
+	return c.key
+}
+
+func (c *zrevrankCmd) Callback() {
+	if c.callback != nil {
+		c.callback(c.ret, c.retError)
+	}
+}
+
+type zscore struct {
+	key      string
+	mem      string
+	ret      float64
+	retError error
+	callBack func(float64, error)
+}
+
+func (c *zscore) ExecCmd(cli IClient) error {
+	c.ret, c.retError = cli.ZScore(c.key, c.mem)
+	return c.retError
+}
+
+func (c *zscore) Key() string {
+	return c.key
+}
+
+func (c *zscore) Callback() {
+	if c.callBack != nil {
+		c.callBack(c.ret, c.retError)
+	}
+}

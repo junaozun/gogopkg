@@ -47,6 +47,7 @@ type IClient interface {
 	ZIncrby(key string, data map[string]int) error
 	ZRem(key string, mems ...string) error
 	ZRevRank(key string, mem string) (int64, error)
+	ZScore(key string, mem string) (float64, error)
 	ZRevRangeWithScores(key string, start, stop int64) ([]redis.Z, error)
 
 	RPush(key string, value ...interface{}) error

@@ -175,3 +175,17 @@ func TestZAdd(t *testing.T) {
 	res, err := client.ZRange("mykey4", 0, -1)
 	fmt.Println(res)
 }
+
+func TestZRevRange(t *testing.T) {
+	ar := NewZAddReq()
+	ar.Add(9, "xioaming")
+	ar.Add(2, "xiaohong")
+	ar.Add(6, "xiaojun")
+	val, err := client.ZAdd("zkey1", ar)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(val)
+	res, err := client.ZRevRangeWithScores("mykey4", 0, -1)
+	fmt.Println(res)
+}
