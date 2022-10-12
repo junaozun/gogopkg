@@ -41,8 +41,7 @@ func parseMethod(svc interface{}) (map[string]*method, error) {
 		}
 
 		if pM, err := genMethod(m); nil != err {
-			continue
-			// return ret, err
+			return ret, err
 		} else {
 			ret[pM.name] = pM
 		}
