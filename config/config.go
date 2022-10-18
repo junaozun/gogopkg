@@ -36,6 +36,7 @@ type CommonConfig struct {
 	Etcd    *EtcdConfig  `yaml:"etcd"`
 	NATS    *NatsConfig  `yaml:"nats"`
 	Kafka   *KafkaConfig `yaml:"kafka"`
+	Mysql   *MysqlConfig `yaml:"mysql"`
 	Redis   *RedisConfig `yaml:"redis"`
 }
 
