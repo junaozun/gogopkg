@@ -154,6 +154,25 @@ func TestHDel(t *testing.T) {
 	}
 }
 
+func TestGoRedis_HisExist(t *testing.T) {
+	err := client.HSet("xiaoming", "age", 10)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	err = client.HSet("xiaoming", "sex", 1)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	ok, err := client.HisExist("xiaoming", "nihao")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	fmt.Println(ok)
+}
+
 func TestKeys(t *testing.T) {
 	res, err := client.Keys("cache*")
 	if err != nil {
