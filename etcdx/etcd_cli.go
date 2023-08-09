@@ -30,6 +30,8 @@ type Config struct {
 	Servers        string `xml:"servers" yaml:"servers"`
 	DialTimeout    int64  `xml:"dial_timeout" yaml:"dial_timeout"`
 	RequestTimeout int64  `xml:"request_timeout" yaml:"request_timeout"`
+	UserName       string `xml:"user_name" yaml:"user_name"`
+	Password       string `xml:"password" yaml:"password"`
 }
 
 func defaultConfig(cfg *Config) {
@@ -58,6 +60,8 @@ func NewClientWithConfig(cfg Config) (*Client, error) {
 	client, err := clientv3.New(clientv3.Config{
 		Endpoints:   strings.Split(cfg.Servers, ","),
 		DialTimeout: time.Duration(cfg.DialTimeout) * time.Second,
+		Username:    cfg.UserName,
+		Password:    cfg.Password,
 	})
 
 	if nil != err {
