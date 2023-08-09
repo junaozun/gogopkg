@@ -2,12 +2,13 @@ package config
 
 // GameConfig 配置
 type GameConfig struct {
+	GateWay *GateConfig   `yaml:"gate"`
+	Login   *ServerConfig `yaml:"login"`
 	Logic   *ServerConfig `yaml:"logic"`
 	Cross   *ServerConfig `yaml:"cross"`
 	Pvp     *ServerConfig `yaml:"pvp"`
 	Battle  *ServerConfig `yaml:"battle"`
 	Web     *ServerConfig `yaml:"web"`
-	GateWay *GateConfig   `yaml:"gate"`
 	Common  *CommonConfig `yaml:"common"`
 }
 
@@ -36,6 +37,7 @@ type CommonConfig struct {
 	Etcd    *EtcdConfig  `yaml:"etcd"`
 	NATS    *NatsConfig  `yaml:"nats"`
 	Kafka   *KafkaConfig `yaml:"kafka"`
+	Mysql   *MysqlConfig `yaml:"mysql"`
 	Redis   *RedisConfig `yaml:"redis"`
 }
 

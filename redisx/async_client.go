@@ -119,36 +119,37 @@ LOOP:
 	for {
 		select {
 		case cmd := <-w.cmds:
-			begin := time.Now()
-			if err := cmd.ExecCmd(c.cli); err != nil {
-				fmt.Errorf("AsyncClient: server cmd[%v] %s", cmd.Key(), err)
-				if c.opt.errorHandler != nil {
-					c.opt.errorHandler(err)
-				}
-			} else {
-				executeTime := time.Since(begin)
-				if executeTime > c.opt.overtimeDur {
-					fmt.Errorf("[AsyncClient] cmd[%v] execute slow, time[%vms]", cmd.Key(), executeTime.Milliseconds())
-				}
-			}
-			if cbCmd, ok := cmd.(CallbackCmder); ok {
-				c.out <- cbCmd
-			}
+			c.ExecCmd(cmd)
 		case <-c.stopChan:
 			break LOOP
 		}
 	}
-
 	// 主动关闭后，还需要将队列中的命令全部执行完
 	for {
 		select {
 		case cmd := <-w.cmds:
-			if err := cmd.ExecCmd(c.cli); err != nil {
-				fmt.Errorf("redisasync: exit server cmd[%v] %s", cmd.Key(), err)
-			}
+			c.ExecCmd(cmd)
 		default:
 			return
 		}
+	}
+}
+
+func (c *AsyncClient) ExecCmd(cmd Command) {
+	begin := time.Now()
+	if err := cmd.ExecCmd(c.cli); err != nil {
+		fmt.Errorf("AsyncClient: server cmd[%v] %s", cmd.Key(), err)
+		if c.opt.errorHandler != nil {
+			c.opt.errorHandler(err)
+		}
+	} else {
+		executeTime := time.Since(begin)
+		if executeTime > c.opt.overtimeDur {
+			fmt.Errorf("[AsyncClient] cmd[%v] execute slow, time[%vms]", cmd.Key(), executeTime.Milliseconds())
+		}
+	}
+	if cbCmd, ok := cmd.(CallbackCmder); ok {
+		c.out <- cbCmd
 	}
 }
 
@@ -277,5 +278,21 @@ func (c *AsyncClient) ZRevRange(key string, start, stop int64, cb func([]redis.Z
 		start:    start,
 		stop:     stop,
 		callback: cb,
+	})
+}
+
+func (c *AsyncClient) ZRevRank(key string, mem string, cb func(int64, error)) {
+	c.addCmd(&zrevrankCmd{
+		key:      key,
+		mem:      mem,
+		callback: cb,
+	})
+}
+
+func (c *AsyncClient) ZScore(key string, mem string, cb func(float64, error)) {
+	c.addCmd(&zscore{
+		key:      key,
+		mem:      mem,
+		callBack: cb,
 	})
 }

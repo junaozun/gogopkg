@@ -37,12 +37,13 @@ func TestASyncClient_HGet(t *testing.T) {
 }
 
 func TestAsyncClient_ZRevRange(t *testing.T) {
-	asyncClient.ZRevRange("su", 0, -1, func(res []redis.Z, err error) {
+	asyncClient.ZRevRange("zkey1", 0, -1, func(res []redis.Z, err error) {
 		if err != nil {
 			t.Error(err)
 		}
 		fmt.Println(res)
 	})
+	asyncClient.Stop(context.Background())
 }
 
 func TestASyncClient_Del(t *testing.T) {

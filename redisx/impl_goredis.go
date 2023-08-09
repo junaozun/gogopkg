@@ -266,6 +266,10 @@ func (c *goRedis) ZRevRangeWithScores(key string, start, stop int64) ([]redis.Z,
 	return c.rdb.ZRevRangeWithScores(context.Background(), key, start, stop).Result()
 }
 
+func (c *goRedis) ZScore(key string, mem string) (float64, error) {
+	return c.rdb.ZScore(context.Background(), key, mem).Result()
+}
+
 func sliceCmdConvert(cmd *redis.SliceCmd) ([]string, error) {
 	var vals = make([]string, 0, len(cmd.Val()))
 	for _, v := range cmd.Val() {
